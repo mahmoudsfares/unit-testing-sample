@@ -1,5 +1,19 @@
-
 import 'package:equatable/equatable.dart';
+
+class FetchState{}
+
+class Loading extends FetchState{}
+
+class Fetched extends FetchState{
+  dynamic data;
+  Fetched(this.data);
+}
+
+class Error extends FetchState{
+  Exception exception;
+  Error(this.exception);
+}
+
 
 class MyDTO extends Equatable{
   int userId;
@@ -27,7 +41,5 @@ class MyDTO extends Equatable{
   }
 
   @override
-  List<Object?> get props => [
-    userId, title
-  ];
+  List<Object?> get props => [userId, id, title, isCompleted];
 }

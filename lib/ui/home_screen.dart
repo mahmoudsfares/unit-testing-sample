@@ -3,6 +3,7 @@ import 'package:flutter/src/widgets/framework.dart';
 import 'package:get/get.dart';
 import 'package:unit_testing_sample/network/http_client.dart';
 import 'package:unit_testing_sample/ui/my_controller.dart';
+import 'package:unit_testing_sample/ui/my_service.dart';
 
 class MyHomeScreen extends GetView<MyController> {
 
@@ -11,15 +12,13 @@ class MyHomeScreen extends GetView<MyController> {
 
     Get.lazyPut(() => MyController());
     Get.lazyPut(() => MyHttpClient());
+    Get.lazyPut(() => MyService());
 
-    return MaterialApp(
+    return const MaterialApp(
       home: Scaffold(
         body: Center(
-          child: ElevatedButton(
-            onPressed: () {},
-            child: Text(
-              'click me'
-            ),
+          child: Text(
+            'hello world!'
           ),
         ),
       ),
