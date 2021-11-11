@@ -7,8 +7,8 @@ import 'package:unit_testing_sample/network/http_client.dart';
 import 'package:mockito/mockito.dart';
 import 'package:unit_testing_sample/ui/my_controller.dart';
 import 'package:unit_testing_sample/ui/my_service.dart';
-import 'mock_data.dart';
-import 'widget_test.mocks.dart';
+import 'service_mock_data.dart';
+import 'service_test.mocks.dart';
 import 'package:http/http.dart' as http;
 
 @GenerateMocks([MyHttpClient])
@@ -18,27 +18,6 @@ void main() {
   Get.put(client as MyHttpClient);
 
 
-
-  //-------------------- TESTING NORMAL METHODS --------------------//
-
-  group('MyController functions', () {
-    MyController controller = MyController();
-
-    test('increment value', () {
-      int value = controller.value;
-      controller.incrementNumber();
-      expect(controller.value, ++value);
-    });
-
-    test('decrement value', () {
-      int value = controller.value;
-      controller.decrementNumber();
-      expect(controller.value, --value);
-    });
-  });
-
-
-
   //-------------------- TESTING FUTURE --------------------//
 
   group('service fetchDataFuture()', () {
@@ -46,9 +25,9 @@ void main() {
 
     test('server responds with list, return list of objects', () async {
       when(client.get()).thenAnswer(
-          (_) async => http.Response(MockData.RESPONSE_JSON_CORRECT_DATA, 200));
+          (_) async => http.Response(ServiceMockData.RESPONSE_JSON_CORRECT_DATA, 200));
       expect(await service.fetchDataFuture(),
-          MockData.RESPONSE_DESERIALIZED_CORRECT_DATA);
+          ServiceMockData.RESPONSE_DESERIALIZED_CORRECT_DATA);
     });
 
     test('server responds with empty list, returns Exception: Empty', () async {
@@ -86,11 +65,11 @@ void main() {
 
     test('server responds with list, emits loading then data', () async {
       when(client.get()).thenAnswer(
-          (_) async => http.Response(MockData.RESPONSE_JSON_CORRECT_DATA, 200));
+          (_) async => http.Response(ServiceMockData.RESPONSE_JSON_CORRECT_DATA, 200));
       expect(service.fetchDataStream(),
           emitsInOrder([
             predicate((o) => o is Loading),
-            predicate((o) => o is Fetched && listEquals(o.data as List<MyDTO>, MockData.RESPONSE_DESERIALIZED_CORRECT_DATA))
+            predicate((o) => o is Fetched && listEquals(o.data as List<MyDTO>, ServiceMockData.RESPONSE_DESERIALIZED_CORRECT_DATA))
           ]));
     });
 

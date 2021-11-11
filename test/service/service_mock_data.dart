@@ -1,6 +1,6 @@
 import 'package:unit_testing_sample/data/data.dart';
 
-class MockData {
+class ServiceMockData {
 
   static late final String RESPONSE_JSON_CORRECT_DATA = """[{
   "userId": 1,
