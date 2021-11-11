@@ -5,18 +5,15 @@ import 'package:mockito/mockito.dart';
 import 'package:unit_testing_sample/data/data.dart';
 import 'package:unit_testing_sample/ui/my_controller.dart';
 import 'package:unit_testing_sample/ui/my_service.dart';
-
 import 'controller_mock_data.dart';
 import 'controller_test.mocks.dart';
 
 @GenerateMocks([MyService])
 void main() {
-  MockMyService service = MockMyService();
-  Get.put(service as MyService);
 
   //-------------------- TESTING NORMAL METHODS --------------------//
 
-  group('MyController functions', () {
+  group('MyController normal methods', () {
     MyController controller = MyController();
 
     test('increment value', () {
@@ -32,19 +29,48 @@ void main() {
     });
   });
 
-  group('MyController functions', () {
+
+  //-------------------- TESTING METHODS WITH MOCKITO --------------------//
+
+  MockMyService service = MockMyService();
+  Get.put(service as MyService);
+
+  group('MyController Methods that need mocking', () {
+
     MyController controller = MyController();
 
-    test('fetch data', () async {
+    test('data fetched correctly, state fetched', () async {
       when(service.fetchDataFuture()).thenAnswer(
           (_) async => ControllerMockData.RESPONSE_DESERIALIZED_CORRECT_DATA);
-      expect(controller.fetchData, returnsNormally);
+      expect(
+          controller.fetchState.stream,
+          emitsInOrder([
+            Loading(),
+            Fetched(ControllerMockData.RESPONSE_DESERIALIZED_CORRECT_DATA)
+          ]));
+      // uncomment this part to test without extending equatable in data
+      // expect(
+      //     controller.fetchState.stream,
+      //     emitsInOrder([
+      //       predicate((o) => o is Loading),
+      //       predicate((o) => o is Fetched && listEquals(o.data as List<MyDTO>, ControllerMockData.RESPONSE_DESERIALIZED_CORRECT_DATA))
+      //     ]));
+      controller.fetchData();
     });
 
-    test('fetch data', () async {
+    test('error fetching data, state error', () async {
       when(service.fetchDataFuture())
           .thenAnswer((_) async => throw Exception("Error fetching data"));
-      expect(controller.fetchData, returnsNormally);
+      expect(controller.fetchState.stream,
+          emitsInOrder([Loading(), Error(Exception('Error fetching data'))]));
+      // uncomment this part to test without extending equatable in data
+      // expect(
+      //     controller.fetchState.stream,
+      //     emitsInOrder([
+      //       predicate((o) => o is Loading),
+      //       predicate((o) => o is Error && o.exception.toString() == "Exception: Error fetching data")
+      //     ]));
+      controller.fetchData();
     });
   });
 }
