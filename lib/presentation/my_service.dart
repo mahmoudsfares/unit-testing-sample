@@ -16,16 +16,18 @@ class MyService {
     if (res.statusCode == 200) {
       final json = jsonDecode(res.body) as List<dynamic>;
       final listResult = json.map((e) => MyDTO.fromJson(e)).toList();
-      if (listResult.isEmpty)
+      if (listResult.isEmpty) {
         throw Exception("Empty");
-      else
+      } else {
         return listResult;
-    } else if (res.statusCode >= 400 && res.statusCode < 500)
+      }
+    } else if (res.statusCode >= 400 && res.statusCode < 500) {
       throw Exception("Error fetching data");
-    else if (res.statusCode >= 500 && res.statusCode < 600)
+    } else if (res.statusCode >= 500 && res.statusCode < 600) {
       throw Exception("Server error");
-    else
+    } else {
       throw Exception("Error occurred, please try again later");
+    }
   }
 
   Stream<FetchState> fetchDataStream() async* {
@@ -35,21 +37,24 @@ class MyService {
     try {
       res = await client.get();
     } catch (e) {
-      if (e is SocketException)
+      if (e is SocketException) {
         yield Error(Exception("No internet connection"));
+      }
     }
     if (res.statusCode == 200) {
       final json = jsonDecode(res.body) as List<dynamic>;
       final listResult = json.map((e) => MyDTO.fromJson(e)).toList();
-      if (listResult.isEmpty)
+      if (listResult.isEmpty) {
         yield Error(Exception("Empty"));
-      else
+      } else {
         yield Fetched(listResult);
-    } else if (res.statusCode >= 400 && res.statusCode < 500)
+      }
+    } else if (res.statusCode >= 400 && res.statusCode < 500) {
       yield Error(Exception("Error fetching data"));
-    else if (res.statusCode >= 500 && res.statusCode < 600)
+    } else if (res.statusCode >= 500 && res.statusCode < 600) {
       yield Error(Exception("Server error"));
-    else
+    } else {
       yield Error(Exception("Error occurred, please try again later"));
+    }
   }
 }

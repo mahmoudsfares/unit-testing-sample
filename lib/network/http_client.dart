@@ -8,13 +8,13 @@ class MyHttpClient {
 
   Future<http.Response> get({Map<String, String>? params}) {
     var url = Uri.http(_baseUrl, 'todos/', params);
-    return http.get(url).timeout(Duration(seconds: 10));
+    return http.get(url).timeout(const Duration(seconds: 10));
   }
 
   Future<http.Response> post<T>(String endpointUrl, T body) {
     var url = Uri.http(_baseUrl, endpointUrl);
     return http.post(
         url, headers: {"Content-Type": "application/json"},
-        body: jsonEncode(body)).timeout(Duration(seconds: 10));
+        body: jsonEncode(body)).timeout(const Duration(seconds: 10));
   }
 }

@@ -1,6 +1,6 @@
 import 'package:get/get.dart';
 import 'package:unit_testing_sample/data/data.dart';
-import 'package:unit_testing_sample/ui/my_service.dart';
+import 'package:unit_testing_sample/presentation/my_service.dart';
 
 class MyController extends GetxController{
 
@@ -14,7 +14,7 @@ class MyController extends GetxController{
 
   void fetchData() async {
     fetchState.value = Loading();
-    try{
+    try {
       List<MyDTO> data = await service.fetchDataFuture();
       fetchState.value = Fetched(data);
     }
@@ -22,5 +22,4 @@ class MyController extends GetxController{
       if (e is Exception) fetchState.value = Error(e);
     }
   }
-
 }

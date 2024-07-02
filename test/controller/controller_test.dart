@@ -3,13 +3,16 @@ import 'package:get/get.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:unit_testing_sample/data/data.dart';
-import 'package:unit_testing_sample/ui/my_controller.dart';
-import 'package:unit_testing_sample/ui/my_service.dart';
+import 'package:unit_testing_sample/presentation/my_controller.dart';
+import 'package:unit_testing_sample/presentation/my_service.dart';
 import 'controller_mock_data.dart';
-import 'controller_test.mocks.dart';
+import '../_mocks/controller_test.mocks.dart';
 
 @GenerateMocks([MyService])
 void main() {
+
+  MockMyService service = MockMyService();
+  Get.put(service as MyService);
 
   //-------------------- TESTING NORMAL METHODS --------------------//
 
@@ -29,26 +32,15 @@ void main() {
     });
   });
 
-
   //-------------------- TESTING METHODS WITH MOCKITO --------------------//
 
-  MockMyService service = MockMyService();
-  Get.put(service as MyService);
-
   group('MyController Methods that need mocking', () {
-
     MyController controller = MyController();
 
     test('data fetched correctly, state fetched', () async {
-      when(service.fetchDataFuture()).thenAnswer(
-          (_) async => ControllerMockData.RESPONSE_DESERIALIZED_CORRECT_DATA);
-      expect(
-          controller.fetchState.stream,
-          emitsInOrder([
-            Loading(),
-            Fetched(ControllerMockData.RESPONSE_DESERIALIZED_CORRECT_DATA)
-          ]));
-      // uncomment this part to test without extending equatable in data
+      when(service.fetchDataFuture()).thenAnswer((_) async => ControllerMockData.RESPONSE_DESERIALIZED_CORRECT_DATA);
+      expect(controller.fetchState.stream, emitsInOrder([Loading(), Fetched(ControllerMockData.RESPONSE_DESERIALIZED_CORRECT_DATA)]));
+      // TODO uncomment this part to test without extending equatable in data
       // expect(
       //     controller.fetchState.stream,
       //     emitsInOrder([
@@ -59,11 +51,9 @@ void main() {
     });
 
     test('error fetching data, state error', () async {
-      when(service.fetchDataFuture())
-          .thenAnswer((_) async => throw Exception("Error fetching data"));
-      expect(controller.fetchState.stream,
-          emitsInOrder([Loading(), Error(Exception('Error fetching data'))]));
-      // uncomment this part to test without extending equatable in data
+      when(service.fetchDataFuture()).thenAnswer((_) async => throw Exception("Error fetching data"));
+      expect(controller.fetchState.stream, emitsInOrder([Loading(), Error(Exception('Error fetching data'))]));
+      // TODO uncomment this part to test without extending equatable in data
       // expect(
       //     controller.fetchState.stream,
       //     emitsInOrder([

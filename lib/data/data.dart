@@ -1,16 +1,15 @@
 import 'package:equatable/equatable.dart';
 
 class MyDTO extends Equatable {
-  int userId;
-  int id;
-  String title;
-  bool isCompleted;
+  final int userId;
+  final int id;
+  final String title;
+  final bool isCompleted;
 
-  MyDTO(this.userId, this.id, this.title, this.isCompleted);
+  const MyDTO(this.userId, this.id, this.title, this.isCompleted);
 
   factory MyDTO.fromJson(Map<String, dynamic> jsonProduct) {
-    return MyDTO(jsonProduct['userId'], jsonProduct['id'], jsonProduct['title'],
-        jsonProduct['completed']);
+    return MyDTO(jsonProduct['userId'], jsonProduct['id'], jsonProduct['title'], jsonProduct['completed']);
   }
 
   Map<String, dynamic> toJson() {
